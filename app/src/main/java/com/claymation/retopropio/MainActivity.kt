@@ -1,25 +1,20 @@
 package com.claymation.retopropio
 
-import LoginScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.claymation.retopropio.Screens.ChatbotScreen
 import com.claymation.retopropio.Screens.HomeScreen
+import com.claymation.retopropio.Screens.LoginScreen
 import com.claymation.retopropio.Screens.SignupScreen
 import com.claymation.retopropio.ui.theme.RetoPropioTheme
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,43 +22,48 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RetoPropioTheme {
-
                 val navController = rememberNavController()
 
-                AppNavigation(navController)
+                // Incluye el AppNavGraph directamente aquí
+                AppNavGraph(navController)
             }
         }
     }
 }
 
-
+// AppNavGraph: Define la navegación para la aplicación
 @Composable
-fun AppNavigation(navController: NavHostController) {
+fun AppNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = "LoginScreen" // Start with the login screen
+        startDestination = "LoginScreen" // Pantalla de inicio
     ) {
-        // Login Screen
+        // Pantalla de login
         composable("LoginScreen") {
             LoginScreen(navController)
         }
 
-        // Signup Screen
+        // Pantalla de registro
         composable("SignupScreen") {
             SignupScreen(navController)
         }
 
-        // Home Screen
+        // Pantalla principal
         composable("HomeScreen") {
             HomeScreen(navController)
+        }
+
+        // Pantalla del ChatBot
+        composable("ChatBotScreen") {
+            ChatbotScreen()  // Puedes pasar el ViewModel si es necesario
         }
     }
 }
 
-
+// Preview para diseño
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     val navController = rememberNavController()
-    AppNavigation(navController)
+    AppNavGraph(navController)
 }

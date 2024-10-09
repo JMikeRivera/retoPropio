@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -48,20 +49,17 @@ import com.claymation.retopropio.R
 @Composable
 fun HomeScreen(navController: NavController?) {
     Scaffold(
-        // Top bar
         topBar = { AppBarTop() },
-
-        // Content
         content = { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(32.dp),
+                    .padding(32.dp)
+                    .verticalScroll(rememberScrollState()),  // Agrega el scroll vertical
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Header
                 Text(
                     text = "Asesoría legal gratuita y confiable",
                     style = TextStyle(
@@ -72,7 +70,6 @@ fun HomeScreen(navController: NavController?) {
                     textAlign = TextAlign.Center
                 )
 
-                // Texto del header
                 Text(
                     text = buildAnnotatedString {
                         withStyle(
@@ -92,10 +89,8 @@ fun HomeScreen(navController: NavController?) {
                     textAlign = TextAlign.Center
                 )
 
-                // Spacer
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Header
                 Text(
                     text = "Ayudanos a encontrar al abogado adecuado para ti",
                     style = TextStyle(
@@ -106,7 +101,6 @@ fun HomeScreen(navController: NavController?) {
                     textAlign = TextAlign.Center
                 )
 
-                // Divider
                 HorizontalDivider(
                     modifier = Modifier.padding(top = 8.dp, bottom = 2.dp),
                     thickness = 1.dp,
@@ -119,20 +113,13 @@ fun HomeScreen(navController: NavController?) {
                     textAlign = TextAlign.Center
                 )
 
-                // Botones de acción
                 ButtonSection()
-
-                // Testimonios
                 TestimonialSection()
-
             }
         },
-
-        // Bottom bar
-        // bottomBar = { AppBarBottom() }
+        bottomBar = { AppBarBottom(navController) }
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -162,7 +149,7 @@ fun AppBarTop() {
 
 
 @Composable
-fun AppBarBottom() {
+fun AppBarBottom( navController: NavController?) {
     BottomAppBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -182,7 +169,10 @@ fun AppBarBottom() {
             Icon(painterResource(id = R.drawable.ic_search), contentDescription = "Buscar")
         }
         IconButton(
-            onClick = { /* TODO: Handle click for Guías */ },
+            onClick = {
+            //navegar a la chabotscreen
+                navController?.navigate("ChatBotScreen")
+            },
             modifier = Modifier.weight(1f)
         ) {
             Icon(painterResource(id = R.drawable.ic_buffet), contentDescription = "Bufete")

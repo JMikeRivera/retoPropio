@@ -1,27 +1,48 @@
 package com.claymation.retopropio.Screens
 
-import androidx.compose.foundation.layout.*
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.claymation.retopropio.Viewmodels.ViewModel
 
 @Composable
 fun SignupScreen(navController: NavController?) {
-    // State variables for user input
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
+    val viewModel: ViewModel = viewModel() // Usando el ViewModel llamado "ViewModel"
+    val context = LocalContext.current
 
-    // Column layout for arranging the UI elements
+    // Observing LiveData from ViewModel
+    val name by viewModel.name.observeAsState("")
+    val secname by viewModel.secname.observeAsState("")
+    val email by viewModel.email.observeAsState("")
+    val age by viewModel.age.observeAsState("")
+    val phone by viewModel.phone.observeAsState("")
+    val password by viewModel.password.observeAsState("")
+    val confirmPassword by viewModel.confirmPassword.observeAsState("")
+    val errorMessage by viewModel.errorMessage.observeAsState(null)
+
+    // UI layout for signup screen
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -32,8 +53,18 @@ fun SignupScreen(navController: NavController?) {
         // Name TextField
         OutlinedTextField(
             value = name,
-            onValueChange = { name = it },
-            label = { Text("Name") },
+            onValueChange = { viewModel.updateName(it) },
+            label = { Text("Nombre") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // secName TextField
+        OutlinedTextField(
+            value = secname,
+            onValueChange = { viewModel.updateSecName(it) },
+            label = { Text("Apellido") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -42,9 +73,31 @@ fun SignupScreen(navController: NavController?) {
         // Email TextField
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
+            onValueChange = { viewModel.updateEmail(it) },
+            label = { Text("Correo Electrónico") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Age TextField
+        OutlinedTextField(
+            value = age,
+            onValueChange = { viewModel.updateAge(it) },
+            label = { Text("Edad") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Phone TextField
+        OutlinedTextField(
+            value = phone,
+            onValueChange = { viewModel.updatePhone(it) },
+            label = { Text("Teléfono") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -53,8 +106,8 @@ fun SignupScreen(navController: NavController?) {
         // Password TextField
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
+            onValueChange = { viewModel.updatePassword(it) },
+            label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth()
@@ -65,8 +118,8 @@ fun SignupScreen(navController: NavController?) {
         // Confirm Password TextField
         OutlinedTextField(
             value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
+            onValueChange = { viewModel.updateConfirmPassword(it) },
+            label = { Text("Confirmar Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth()
@@ -74,42 +127,39 @@ fun SignupScreen(navController: NavController?) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Error message (if any)
-        if (errorMessage.isNotEmpty()) {
-            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+        // Error messages
+        errorMessage?.let {
+            Text(text = it, color = MaterialTheme.colorScheme.error)
             Spacer(modifier = Modifier.height(8.dp))
         }
 
         // Sign Up Button
         Button(
             onClick = {
-                // Basic validation: ensure fields are not empty and passwords match
-                when {
-                    name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() -> {
-                        errorMessage = "All fields are required."
+                viewModel.register(
+                    context = context,
+                    onSuccess = {
+                        // Show success message and navigate to login screen
+                        Toast.makeText(context, "Registro exitoso", Toast.LENGTH_LONG).show()
+                        navController?.navigate("LoginScreen")
+                    },
+                    onFailure = {
+                        Toast.makeText(context, "Registro fallido", Toast.LENGTH_LONG).show()
                     }
-                    password != confirmPassword -> {
-                        errorMessage = "Passwords do not match."
-                    }
-                    else -> {
-                        errorMessage = ""
-                        // Handle the sign-up logic here (e.g., create an account)
-                        navController?.navigate("LoginScreen") // Navigate back to login after signup
-                    }
-                }
+                )
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Sign Up")
+            Text(text = "Registrar")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         // Already have an account? Go to login
         TextButton(onClick = {
-            navController?.navigate("LoginScreen") // Navigate back to login
+            navController?.navigate("LoginScreen")
         }) {
-            Text(text = "Already have an account? Log In")
+            Text(text = "¿Ya tienes cuenta? Inicia sesión")
         }
     }
 }
