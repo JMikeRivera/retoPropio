@@ -113,7 +113,7 @@ fun HomeScreen(navController: NavController?) {
                     textAlign = TextAlign.Center
                 )
 
-                ButtonSection()
+                ButtonSection( navController)
                 TestimonialSection()
             }
         },
@@ -163,7 +163,10 @@ fun AppBarBottom( navController: NavController?) {
             Icon(painterResource(id = R.drawable.ic_process), contentDescription = "Procesos")
         }
         IconButton(
-            onClick = { /* TODO: Handle click for Bufete */ },
+            onClick = { /* TODO: Handle click for Bufete */
+                navController?.navigate("Noticias")
+
+            },
             modifier = Modifier.weight(1f)
         ) {
             Icon(painterResource(id = R.drawable.ic_search), contentDescription = "Buscar")
@@ -182,7 +185,7 @@ fun AppBarBottom( navController: NavController?) {
 
 
 @Composable
-fun ButtonSection() {
+fun ButtonSection(navController: NavController?) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Button(
             onClick = { /*TODO: navegar a asesoria marital*/ },
@@ -227,7 +230,10 @@ fun ButtonSection() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /*TODO: navegar a ayuda con la seleccion*/ },
+            onClick = { /*TODO: navegar a ayuda con la seleccion*/
+
+                navController?.navigate("Glosario")
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),

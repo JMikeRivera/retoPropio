@@ -11,8 +11,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.claymation.retopropio.Screens.ChatbotScreen
+import com.claymation.retopropio.Screens.ClientDataScreen
+import com.claymation.retopropio.Screens.GlosarioScreen
 import com.claymation.retopropio.Screens.HomeScreen
 import com.claymation.retopropio.Screens.LoginScreen
+import com.claymation.retopropio.Screens.NoticiasScreen
 import com.claymation.retopropio.Screens.SignupScreen
 import com.claymation.retopropio.ui.theme.RetoPropioTheme
 
@@ -55,8 +58,25 @@ fun AppNavGraph(navController: NavHostController) {
 
         // Pantalla del ChatBot
         composable("ChatBotScreen") {
-            ChatbotScreen()  // Puedes pasar el ViewModel si es necesario
+            ChatbotScreen( navController)  // Puedes pasar el ViewModel si es necesario
         }
+
+        // Pantalla del Perfil de Usuario
+        composable("ClientData") {
+            ClientDataScreen( navController)  // Puedes pasar el ViewModel si es necesario
+        }
+
+        // Pantalla de Noticias
+        composable("Noticias") {
+            NoticiasScreen( navController)  // Puedes pasar el ViewModel si es necesario
+        }
+
+        // Pantalla de Glosario
+        composable("Glosario") {
+            GlosarioScreen( navController)  // Puedes pasar el ViewModel si es necesario
+        }
+
+
     }
 }
 

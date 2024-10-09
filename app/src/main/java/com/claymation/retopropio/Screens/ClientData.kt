@@ -6,18 +6,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun ChatbotScreen(navController: NavController?) {
-    //quiero guardar esto en una lista "Hello","How are you?","I'm fine, thank you!"
+fun ClientDataScreen(navController: NavController?) {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
         //Chat
-        Text("Chatbot")
+        Text("Client Data Screen")
         /*
         // Message List
         LazyColumn(
@@ -57,30 +55,4 @@ fun ChatbotScreen(navController: NavController?) {
         */
 
     }
-}
-/*
-@Composable
-fun MessageBubble(chatMessage: ChatMessage) {
-    val backgroundColor = if (chatMessage.isUser) Color(0xFFD1E8FF) else Color(0xFFF1F1F1)
-    val alignment = if (chatMessage.isUser) Alignment.End else Alignment.Start
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)
-            .wrapContentWidth(alignment)
-            .background(backgroundColor, shape = MaterialTheme.shapes.medium)
-            .padding(12.dp)
-    ) {
-        Text(text = chatMessage.message)
-    }
-}
-*/
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun ChatbotScreenPreview() {
-    ChatbotScreen( null)
 }
