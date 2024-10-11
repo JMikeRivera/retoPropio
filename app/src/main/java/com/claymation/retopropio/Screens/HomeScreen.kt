@@ -188,7 +188,10 @@ fun AppBarBottom( navController: NavController?) {
 fun ButtonSection(navController: NavController?) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Button(
-            onClick = { /*TODO: navegar a asesoria marital*/ },
+            onClick = { /*TODO: navegar a asesoria marital*/
+                navController?.navigate("Familiar")
+
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF539EFF))
@@ -202,7 +205,9 @@ fun ButtonSection(navController: NavController?) {
         Spacer(modifier = Modifier.height(4.dp))
 
         Button(
-            onClick = { /*TODO: navegar a asesoria laboral*/ },
+            onClick = { /*TODO: navegar a asesoria laboral*/
+                navController?.navigate("Mercantil")
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF539EFF))
@@ -216,7 +221,9 @@ fun ButtonSection(navController: NavController?) {
         Spacer(modifier = Modifier.height(4.dp))
 
         Button(
-            onClick = { /*TODO: navegar a asesoria penal*/ },
+            onClick = { /*TODO: navegar a asesoria civil*/
+                navController?.navigate("Civil")
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF539EFF))

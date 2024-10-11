@@ -131,7 +131,7 @@ fun MostrarCasos(casos: List<Caso>, navController: NavController?) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        navController?.navigate("detail")  // Navigate to detail screen on click
+                        navController?.navigate("Registro")  // Navigate to detail screen on click
                     }
                     .padding(vertical = 8.dp),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),

@@ -12,11 +12,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.claymation.retopropio.Screens.CasosScreen
 import com.claymation.retopropio.Screens.ChatbotScreen
+import com.claymation.retopropio.Screens.CivilScreen
 import com.claymation.retopropio.Screens.ClientDataScreen
+import com.claymation.retopropio.Screens.FamiliarScreen
 import com.claymation.retopropio.Screens.GlosarioScreen
 import com.claymation.retopropio.Screens.HomeScreen
 import com.claymation.retopropio.Screens.LoginScreen
+import com.claymation.retopropio.Screens.MercantilScreen
 import com.claymation.retopropio.Screens.NoticiasScreen
+import com.claymation.retopropio.Screens.RegistroScreen
 import com.claymation.retopropio.Screens.SignupScreen
 import com.claymation.retopropio.ui.theme.RetoPropioTheme
 
@@ -82,6 +86,20 @@ fun AppNavGraph(navController: NavHostController) {
         composable("Casos") {
             CasosScreen( navController)  // Puedes pasar el ViewModel si es necesario
         }
+
+        composable("Familiar") {
+            FamiliarScreen( navController)
+        }
+        composable("Mercantil") {
+            MercantilScreen( navController)
+        }
+        composable("Civil") {
+            CivilScreen( navController)
+        }
+        composable("Registro"){
+            RegistroScreen(navController, "Legal Topics")
+        }
+
 
     }
 }
