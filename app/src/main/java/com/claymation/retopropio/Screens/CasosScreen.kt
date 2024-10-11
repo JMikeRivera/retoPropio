@@ -32,7 +32,7 @@ import androidx.navigation.NavController
 import com.claymation.retopropio.Viewmodels.ViewModel as MyViewModel
 
 enum class TipoDerecho {
-    DERECHO_CIVIL, DERECHO_PENAL, DERECHO_FAMILIAR
+    DERECHO_CIVIL, DERECHO_MERCANTIL, DERECHO_FAMILIAR
 }
 
 data class Caso(val nombre: String, val descripcion: String)
@@ -68,7 +68,7 @@ fun CasosScreen(navController: NavController, topic: String) {
         )
 
         SeccionDerecho("Derecho Civil") { selectedSection = TipoDerecho.DERECHO_CIVIL }
-        SeccionDerecho("Derecho Penal") { selectedSection = TipoDerecho.DERECHO_PENAL }
+        SeccionDerecho("Derecho Mercantil") { selectedSection = TipoDerecho.DERECHO_MERCANTIL }
         SeccionDerecho("Derecho Familiar") { selectedSection = TipoDerecho.DERECHO_FAMILIAR }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -76,7 +76,7 @@ fun CasosScreen(navController: NavController, topic: String) {
         selectedSection?.let {
             when (it) {
                 TipoDerecho.DERECHO_CIVIL -> MostrarCasosDerechoCivil(navController, isLoggedIn)
-                TipoDerecho.DERECHO_PENAL -> MostrarCasosDerechoPenal(navController, isLoggedIn)
+                TipoDerecho.DERECHO_MERCANTIL -> MostrarCasosDerechoMercantil(navController, isLoggedIn)
                 TipoDerecho.DERECHO_FAMILIAR -> MostrarCasosDerechoFamiliar(navController, isLoggedIn)
             }
         }
@@ -110,21 +110,25 @@ fun SeccionDerecho(nombreSeccion: String, onClick: () -> Unit) {
 
 @Composable
 fun MostrarCasosDerechoCivil(navController: NavController, isLoggedIn: Boolean) {
-    val casos = listOf(
-        Caso("Contratodecompraventa", "Resolución de conflictos relacionados con compraventas."),
-        Caso("Arrendamiento", "Casos de arrendamiento y derechos de inquilinos."),
-        Caso("Sucesiones", "Procesos de herencias y sucesiones.")
+    val casos = listOf(Caso("Consignaciones de rentas", "Procesos relacionados con el pago de rentas en consignación."),
+        Caso("Facturas Judiciales", "Casos sobre la emisión y pago de facturas judiciales."),
+        Caso("Incumplimiento de contratos de arrendamiento", "Casos relacionados con el incumplimiento de contratos de arrendamiento."),
+        Caso("Carta de terminación de contrato de arrendamiento", "Procesos de redacción y gestión de cartas de terminación de contratos de arrendamiento."),
+        Caso("Revisiones de contratos", "Revisión de contratos de arrendamiento, comodato y compraventa de inmuebles."),
+        Caso("Redacción de contratos de comodato", "Procesos de redacción de contratos de comodato."),
+        Caso("Incumplimiento de contratos de servicios funerarios", "Casos relacionados con el incumplimiento de contratos de servicios funerarios.")
     )
 
     MostrarCasos(casos, navController, isLoggedIn)
 }
 
 @Composable
-fun MostrarCasosDerechoPenal(navController: NavController, isLoggedIn: Boolean) {
+fun MostrarCasosDerechoMercantil(navController: NavController, isLoggedIn: Boolean) {
     val casos = listOf(
-        Caso("Delitosmenores", "Defensa en casos de delitos menores."),
-        Caso("Delitosgraves", "Casos que involucran delitos graves."),
-        Caso("Fraude", "Procesos penales relacionados con fraudes.")
+        Caso("Cargos No Reconocidos", "Procesos para la reclamación de cargos no reconocidos en cuentas o tarjetas."),
+        Caso("Reclamaciones Ante CONDUSEF", "Casos de reclamaciones y quejas ante la CONDUSEF."),
+        Caso("Reclamaciones Ante PROFECO", "Casos de reclamaciones y quejas ante la PROFECO."),
+        Caso("Titulos De Credito", "Procesos legales relacionados con el manejo y reclamación de títulos de crédito.")
     )
 
     MostrarCasos(casos, navController, isLoggedIn)
@@ -133,9 +137,18 @@ fun MostrarCasosDerechoPenal(navController: NavController, isLoggedIn: Boolean) 
 @Composable
 fun MostrarCasosDerechoFamiliar(navController: NavController, isLoggedIn: Boolean) {
     val casos = listOf(
-        Caso("Divorcio", "Procesos legales de divorcio."),
-        Caso("Custodiademenores", "Casos relacionados con la custodia de hijos."),
-        Caso("Adopciones", "Procesos legales de adopción.")
+        Caso("Divorcios", "Procesos legales de divorcio."),
+        Caso("Rectificaciones de Acta", "Casos sobre la corrección de nombre, fechas o género en actas."),
+        Caso("Pensiones Alimenticias", "Procesos relacionados con el otorgamiento o modificación de pensiones alimenticias."),
+        Caso("Convivencias", "Casos relacionados con la regulación de convivencias familiares."),
+        Caso("Custodia", "Procesos sobre la custodia de menores."),
+        Caso("Reconocimiento de Paternidad", "Casos de reconocimiento legal de paternidad."),
+        Caso("Nombramiento de Tutor", "Procesos de nombramiento de tutores legales."),
+        Caso("Cancelación Acta de Nacimiento", "Procesos legales para la cancelación de actas de nacimiento."),
+        Caso("Registros Extemporáneos", "Casos de registro tardío de nacimientos."),
+        Caso("Identidad de Nombre", "Procesos legales sobre la identidad de nombre."),
+        Caso("Adopciones (sujeto a estudio)", "Procesos de adopción que requieren un estudio previo."),
+        Caso("Incidentes Reducción, Aumento o Cancelación de pensión alimenticia", "Casos relacionados con cambios en las pensiones alimenticias.")
     )
 
     MostrarCasos(casos, navController, isLoggedIn)

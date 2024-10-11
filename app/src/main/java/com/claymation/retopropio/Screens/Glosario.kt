@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,22 +25,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONArray
 
 data class Abogado(val nombre: String, val tipoCasos: String, val contacto: String)
 
 @Composable
 fun GlosarioScreen(navController: NavController?){
-    val abogados = listOf(
-        Abogado("María López", "Derecho Civil", "mlopez@example.com"),
-        Abogado("Juan Pérez", "Derecho Penal", "jperez@example.com"),
-        Abogado("Ana García", "Derecho Familiar", "agarcia@example.com")
-    )
 
+    var abogados by remember { mutableStateOf<List<Abogado>>(emptyList()) }
     var abogadoSeleccionado by remember { mutableStateOf<Abogado?>(null) }
     var searchText by remember { mutableStateOf("") }
 
     val abogadosFiltrados = abogados.filter { abogado ->
         abogado.nombre.contains(searchText, ignoreCase = true)
+    }
+
+
+    LaunchedEffect(Unit) {
+        abogados = obtenerAbogadosConPermiso2()
     }
 
     Column(
@@ -145,6 +152,36 @@ fun AbogadoInfoDialog(abogado: Abogado, onDismiss: () -> Unit) {
             }
         }
     )
+}
+
+suspend fun obtenerAbogadosConPermiso2(): List<Abogado> {
+    return withContext(Dispatchers.IO) {
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("https://bufetecapi.onrender.com/usuarios/permisos/2")  // Cambiar la URL para apuntar a la nueva ruta
+            .build()
+
+        val response = client.newCall(request).execute()
+        val json = response.body?.string()
+
+        if (json != null) {
+            val usuariosJson = JSONArray(json)
+            val abogados = mutableListOf<Abogado>()
+            for (i in 0 until usuariosJson.length()) {
+                val usuarioJson = usuariosJson.getJSONObject(i)
+                abogados.add(
+                    Abogado(
+                        nombre = usuarioJson.getString("Nombre"),
+                        tipoCasos = "N/A",  // Si no tienes un campo de casos, puedes dejar esto como "N/A" o agregar el valor correcto
+                        contacto = usuarioJson.getString("Correo")
+                    )
+                )
+            }
+            return@withContext abogados
+        } else {
+            emptyList()
+        }
+    }
 }
 
 

@@ -122,7 +122,20 @@ fun HomeScreen(navController: NavController?) {
 
                 ButtonSection( navController)
                 TestimonialSection()
-            }
+
+                Button(
+                    onClick = { /*TODO: navegar a asesoria marital*/
+                        navController?.navigate("Glosario")
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF539EFF))
+                ) {
+                    Text(
+                        text = "Conoce Nuestros Abogados",
+                        style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    )
+                }            }
         },
         bottomBar = { AppBarBottom(navController) }
     )
@@ -297,6 +310,7 @@ fun TestimonialSection() {
         }
     }
 }
+
 
 
 @Preview(showBackground = true)
