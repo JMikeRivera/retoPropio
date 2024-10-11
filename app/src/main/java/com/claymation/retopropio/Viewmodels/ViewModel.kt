@@ -1,15 +1,17 @@
 package com.claymation.retopropio.Viewmodels
 
 import android.content.Context
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.claymation.retopropio.Datastore.SaveEmail
 import com.claymation.retopropio.Datastore.SaveLoggedInStatus
+import com.claymation.retopropio.Datastore.getEmail
+import com.claymation.retopropio.Datastore.getLoggedInStatus
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
@@ -21,37 +23,55 @@ import org.json.JSONObject
 import java.io.IOException
 
 class ViewModel : ViewModel() {
-    // MutableLiveData to hold email, password, and other fields for registration
-    private val _email = MutableLiveData<String>()
-    val email: LiveData<String> get() = _email
+    // MutableStateFlows to hold email, password, and other fields for registration
+    private val _email = MutableStateFlow("")
+    val email: StateFlow<String> get() = _email
 
-    private val _password = MutableLiveData<String>()
-    val password: LiveData<String> get() = _password
+    private val _password = MutableStateFlow("")
+    val password: StateFlow<String> get() = _password
 
-    private val _confirmPassword = MutableLiveData<String>()
-    val confirmPassword: LiveData<String> get() = _confirmPassword
+    private val _confirmPassword = MutableStateFlow("")
+    val confirmPassword: StateFlow<String> get() = _confirmPassword
 
-    private val _name = MutableLiveData<String>()
-    val name: LiveData<String> get() = _name
+    private val _name = MutableStateFlow("")
+    val name: StateFlow<String> get() = _name
 
-    private val _secname = MutableLiveData<String>()
-    val secname: LiveData<String> get() = _secname
+    private val _secname = MutableStateFlow("")
+    val secname: StateFlow<String> get() = _secname
 
-    private val _age = MutableLiveData<String>()
-    val age: LiveData<String> get() = _age
+    private val _age = MutableStateFlow("")
+    val age: StateFlow<String> get() = _age
 
-    private val _phone = MutableLiveData<String>()
-    val phone: LiveData<String> get() = _phone
+    private val _phone = MutableStateFlow("")
+    val phone: StateFlow<String> get() = _phone
 
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> get() = _errorMessage
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> get() = _errorMessage
 
-    private val _isLoggedIn = MutableLiveData<Boolean>()
-    val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
+    // StateFlow for authentication status
+    private val _isLoggedIn = MutableStateFlow(false)
+    val isLoggedIn: StateFlow<Boolean> get() = _isLoggedIn
 
     private val client = OkHttpClient()
 
-    // Functions to update LiveData fields
+    // Initialize the ViewModel and load the authentication status
+    fun initialize(context: Context) {
+        // Observa el Flow del estado de autenticación y actualiza _isLoggedIn
+        viewModelScope.launch {
+            context.getLoggedInStatus().collect { status ->
+                _isLoggedIn.value = status
+            }
+        }
+
+        // Observa el Flow del email y actualiza _email
+        viewModelScope.launch {
+            context.getEmail().collect { emailValue ->
+                _email.value = emailValue
+            }
+        }
+    }
+
+    // Functions to update StateFlow fields
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
     }
@@ -80,13 +100,12 @@ class ViewModel : ViewModel() {
         _phone.value = newPhone
     }
 
-    // Function to login via API and store data in DataStore
     fun login(context: Context, onSuccess: () -> Unit, onFailure: () -> Unit) {
         val currentEmail = _email.value
         val currentPassword = _password.value
 
         // Validate inputs before making API call
-        if (currentEmail.isNullOrEmpty() || currentPassword.isNullOrEmpty()) {
+        if (currentEmail.isEmpty() || currentPassword.isEmpty()) {
             _errorMessage.value = "Por favor, ingrese el email y la contraseña."
             return
         }
@@ -105,7 +124,7 @@ class ViewModel : ViewModel() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("AuthError", "Error en la red: ${e.message}")
+                // Cambiamos al hilo principal
                 viewModelScope.launch(Dispatchers.Main) {
                     _errorMessage.value = "Error de red: ${e.message}"
                     onFailure() // Callback on failure
@@ -113,33 +132,32 @@ class ViewModel : ViewModel() {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body?.string()
+                val responseBody = response.body?.string()
+                if (response.isSuccessful && responseBody != null) {
                     val jsonResponse = JSONObject(responseBody)
                     val success = jsonResponse.getBoolean("success")
 
                     if (success) {
                         // Login successful, store email and logged in status in DataStore
-                        viewModelScope.launch(Dispatchers.IO) {
-                            context.SaveEmail(currentEmail!!)
+                        viewModelScope.launch {
+                            context.SaveEmail(currentEmail)
                             context.SaveLoggedInStatus(true)
-
-                            viewModelScope.launch(Dispatchers.Main) {
-                                _isLoggedIn.value = true
+                            // Cambiamos al hilo principal
+                            withContext(Dispatchers.Main) {
                                 _errorMessage.value = null
                                 onSuccess() // Callback on success
                             }
                         }
                     } else {
                         val message = jsonResponse.getString("message")
-                        Log.e("AuthError", "Error de autenticación: $message")
+                        // Cambiamos al hilo principal
                         viewModelScope.launch(Dispatchers.Main) {
                             _errorMessage.value = message
                             onFailure() // Callback on failure
                         }
                     }
                 } else {
-                    Log.e("AuthError", "Error en la respuesta del servidor.")
+                    // Cambiamos al hilo principal
                     viewModelScope.launch(Dispatchers.Main) {
                         _errorMessage.value = "Error en la autenticación"
                         onFailure() // Callback on failure
@@ -149,15 +167,13 @@ class ViewModel : ViewModel() {
         })
     }
 
-    // Function para iniciar sesión como invitado
+    // Function to log in as guest
     fun loginAsGuest(context: Context, onSuccess: () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            context.SaveLoggedInStatus(true)
-            viewModelScope.launch(Dispatchers.Main) {
-                _isLoggedIn.value = true
-                _errorMessage.value = null
-                onSuccess()
-            }
+        viewModelScope.launch {
+            context.SaveLoggedInStatus(false)
+            context.SaveEmail("")
+            _errorMessage.value = null
+            onSuccess()
         }
     }
 
@@ -172,8 +188,8 @@ class ViewModel : ViewModel() {
         val currentConfirmPassword = _confirmPassword.value
 
         // Validate inputs before making API call
-        if (currentName.isNullOrEmpty() || currentEmail.isNullOrEmpty() || currentPassword.isNullOrEmpty() ||
-            currentConfirmPassword.isNullOrEmpty() || currentAge.isNullOrEmpty() || currentPhone.isNullOrEmpty()) {
+        if (currentName.isEmpty() || currentEmail.isEmpty() || currentPassword.isEmpty() ||
+            currentConfirmPassword.isEmpty() || currentAge.isEmpty() || currentPhone.isEmpty()) {
             _errorMessage.value = "Todos los campos son obligatorios."
             return
         }
@@ -202,33 +218,33 @@ class ViewModel : ViewModel() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("AuthError", "Error al registrar: ${e.message}")
-                viewModelScope.launch(Dispatchers.Main) {
-                    _errorMessage.value = "Error de red: ${e.message}"
-                    onFailure() // Callback on failure
-                }
+                _errorMessage.value = "Error de red: ${e.message}"
+                onFailure() // Callback on failure
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    Log.d("AuthSuccess", "Usuario registrado con éxito")
-                    viewModelScope.launch(Dispatchers.IO) {
-                        context.SaveEmail(currentEmail!!)
+                    viewModelScope.launch {
+                        context.SaveEmail(currentEmail)
                         context.SaveLoggedInStatus(true)
-
-                        viewModelScope.launch(Dispatchers.Main) {
-                            _errorMessage.value = null
-                            onSuccess() // Callback on success
-                        }
+                        _errorMessage.value = null
+                        onSuccess() // Callback on success
                     }
                 } else {
-                    Log.e("AuthError", "Error en la respuesta: ${response.body?.string()}")
-                    viewModelScope.launch(Dispatchers.Main) {
-                        _errorMessage.value = "Error en el registro."
-                        onFailure() // Callback on failure
-                    }
+                    val errorBody = response.body?.string()
+                    _errorMessage.value = "Error en el registro."
+                    onFailure() // Callback on failure
                 }
             }
         })
+    }
+
+    // Function to log out the user
+    fun logout(context: Context, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            context.SaveLoggedInStatus(false)
+            context.SaveEmail("")
+            onSuccess()
+        }
     }
 }

@@ -209,7 +209,7 @@ fun MostrarDialogoValidacion(
 }
 
 fun validarDatos(esDeNuevoLeon: Boolean, edad: Int, ingresoMensual: Int): Boolean {
-    return esDeNuevoLeon && edad >= 18 && ingresoMensual >= 5000
+    return esDeNuevoLeon && edad >= 18 && ingresoMensual <= 30000
 }
 
 @Composable

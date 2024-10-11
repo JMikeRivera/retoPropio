@@ -9,20 +9,43 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.claymation.retopropio.Viewmodels.ViewModel as MyViewModel
 
 @Composable
 fun CivilScreen(navController: NavController) {
+    val context = LocalContext.current
+    val viewModel: MyViewModel = viewModel()
+
+    // Inicializar el ViewModel si aún no lo has hecho
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
+
+    // Usa 'collectAsState()' para observar 'isLoggedIn' de tipo 'StateFlow<Boolean>'
+    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
+
+    var selectedSection by remember { mutableStateOf<TipoDerecho?>(null) }
 
     Column(
         modifier = Modifier
@@ -49,21 +72,28 @@ fun CivilScreen(navController: NavController) {
             Caso("Incumplimiento de contratos de servicios funerarios", "Casos relacionados con el incumplimiento de contratos de servicios funerarios.")
         )
 
-        MostrarCasos(casos = casos, navController)
+        MostrarCasos(casos = casos, navController = navController, isLoggedIn = isLoggedIn)
 
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
+// Añade la función MostrarCasos dentro de MercantilScreen.kt
 @Composable
-private fun MostrarCasos(casos: List<Caso>, navController: NavController) {
+private fun MostrarCasos(casos: List<Caso>, navController: NavController, isLoggedIn: Boolean) {
+    var showLoginPrompt by remember { mutableStateOf(false) }
     Column {
         casos.forEach { caso ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        navController.navigate("Registro/${caso.nombre.replace(" ", "")}")
+                        if (isLoggedIn) {
+                            val topicSinEspacios = caso.nombre.replace(" ", "")
+                            navController.navigate("Registro/$topicSinEspacios")
+                        } else {
+                            showLoginPrompt = true
+                        }
                     }
                     .padding(vertical = 8.dp),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
@@ -88,5 +118,27 @@ private fun MostrarCasos(casos: List<Caso>, navController: NavController) {
                 }
             }
         }
+    }
+    if (showLoginPrompt) {
+        AlertDialog(
+            onDismissRequest = { showLoginPrompt = false },
+            title = { Text(text = "Iniciar Sesión") },
+            text = { Text(text = "Debe iniciar sesión para acceder a esta función.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showLoginPrompt = false
+                        navController.navigate("LoginScreen")
+                    }
+                ) {
+                    Text("Iniciar Sesión")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLoginPrompt = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }

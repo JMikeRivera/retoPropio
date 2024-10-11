@@ -15,8 +15,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,15 +32,16 @@ fun SignupScreen(navController: NavController?) {
     val viewModel: ViewModel = viewModel() // Usando el ViewModel llamado "ViewModel"
     val context = LocalContext.current
 
-    // Observing LiveData from ViewModel
-    val name by viewModel.name.observeAsState("")
-    val secname by viewModel.secname.observeAsState("")
-    val email by viewModel.email.observeAsState("")
-    val age by viewModel.age.observeAsState("")
-    val phone by viewModel.phone.observeAsState("")
-    val password by viewModel.password.observeAsState("")
-    val confirmPassword by viewModel.confirmPassword.observeAsState("")
-    val errorMessage by viewModel.errorMessage.observeAsState(null)
+    // Observing StateFlow from ViewModel
+    val name by viewModel.name.collectAsState()
+    val secname by viewModel.secname.collectAsState()
+    val email by viewModel.email.collectAsState()
+    val age by viewModel.age.collectAsState()
+    val phone by viewModel.phone.collectAsState()
+    val password by viewModel.password.collectAsState()
+    val confirmPassword by viewModel.confirmPassword.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
 
     // UI layout for signup screen
     Column(

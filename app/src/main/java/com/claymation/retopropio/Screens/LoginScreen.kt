@@ -19,8 +19,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,10 +42,11 @@ fun LoginScreen(navController: NavController?) {
     val viewModel: ViewModel = viewModel() // Usando el ViewModel llamado "ViewModel"
     val context = LocalContext.current
 
-    // Observing LiveData from the ViewModel
-    val email by viewModel.email.observeAsState("")
-    val password by viewModel.password.observeAsState("")
-    val errorMessage by viewModel.errorMessage.observeAsState(null)
+    // Observing StateFlow from the ViewModel
+    val email by viewModel.email.collectAsState()
+    val password by viewModel.password.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
 
     // UI layout
     Column(
