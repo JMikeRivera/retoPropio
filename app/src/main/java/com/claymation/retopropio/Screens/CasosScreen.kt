@@ -57,9 +57,9 @@ fun CasosScreen(navController: NavController?) {
 
         selectedSection?.let {
             when (it) {
-                TipoDerecho.DERECHO_CIVIL -> MostrarCasosDerechoCivil()
-                TipoDerecho.DERECHO_PENAL -> MostrarCasosDerechoPenal()
-                TipoDerecho.DERECHO_FAMILIAR -> MostrarCasosDerechoFamiliar()
+                TipoDerecho.DERECHO_CIVIL -> MostrarCasosDerechoCivil(navController)
+                TipoDerecho.DERECHO_PENAL -> MostrarCasosDerechoPenal(navController)
+                TipoDerecho.DERECHO_FAMILIAR -> MostrarCasosDerechoFamiliar(navController)
             }
         }
     }
@@ -91,45 +91,48 @@ fun SeccionDerecho(nombreSeccion: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun MostrarCasosDerechoCivil() {
+fun MostrarCasosDerechoCivil(navController: NavController?) {
     val casos = listOf(
         Caso("Contrato de compraventa", "Resolución de conflictos relacionados con compraventas."),
         Caso("Arrendamiento", "Casos de arrendamiento y derechos de inquilinos."),
         Caso("Sucesiones", "Procesos de herencias y sucesiones.")
     )
 
-    MostrarCasos(casos)
+    MostrarCasos(casos,navController)
 }
 
 @Composable
-fun MostrarCasosDerechoPenal() {
+fun MostrarCasosDerechoPenal(navController: NavController?) {
     val casos = listOf(
         Caso("Delitos menores", "Defensa en casos de delitos menores."),
         Caso("Delitos graves", "Casos que involucran delitos graves."),
         Caso("Fraude", "Procesos penales relacionados con fraudes.")
     )
 
-    MostrarCasos(casos)
+    MostrarCasos(casos,navController)
 }
 
 @Composable
-fun MostrarCasosDerechoFamiliar() {
+fun MostrarCasosDerechoFamiliar(navController: NavController?) {
     val casos = listOf(
         Caso("Divorcio", "Procesos legales de divorcio."),
         Caso("Custodia de menores", "Casos relacionados con la custodia de hijos."),
         Caso("Adopciones", "Procesos legales de adopción.")
     )
 
-    MostrarCasos(casos)
+    MostrarCasos(casos,navController)
 }
 
 @Composable
-fun MostrarCasos(casos: List<Caso>) {
+fun MostrarCasos(casos: List<Caso>, navController: NavController?) {
     Column {
         casos.forEach { caso ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable {
+                        navController?.navigate("detail")  // Navigate to detail screen on click
+                    }
                     .padding(vertical = 8.dp),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
             ) {

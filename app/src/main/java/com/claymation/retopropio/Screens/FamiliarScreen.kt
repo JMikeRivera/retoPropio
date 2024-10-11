@@ -53,7 +53,7 @@ fun FamiliarScreen(navController: NavController?){
             Caso("Incidentes Reducción, Aumento o Cancelación de pensión alimenticia", "Casos relacionados con cambios en las pensiones alimenticias.")
         )
 
-        MostrarCasos(casos = casos)
+        MostrarCasos(casos = casos, navController)
 
         Spacer(modifier = Modifier.height(16.dp))
 

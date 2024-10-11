@@ -46,7 +46,7 @@ fun MercantilScreen(navController: NavController?){
             Caso("Títulos de crédito", "Procesos legales relacionados con el manejo y reclamación de títulos de crédito.")
         )
 
-        MostrarCasos(casos = casos)
+        MostrarCasos(casos = casos, navController)
 
         Spacer(modifier = Modifier.height(16.dp))
 

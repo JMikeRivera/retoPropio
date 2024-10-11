@@ -50,7 +50,7 @@ fun CivilScreen(navController: NavController?){
         )
 
 
-        MostrarCasos(casos = casos)
+        MostrarCasos(casos = casos, navController)
 
         Spacer(modifier = Modifier.height(16.dp))
 
