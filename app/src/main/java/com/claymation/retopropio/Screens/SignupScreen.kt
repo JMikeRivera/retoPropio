@@ -15,8 +15,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,6 +33,12 @@ import com.claymation.retopropio.Viewmodels.ViewModel
 fun SignupScreen(navController: NavController?) {
     val viewModel: ViewModel = viewModel() // Usando el ViewModel llamado "ViewModel"
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    // Inicializando el ViewModel para cargar los datos del DataStore
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
 
     // Observing StateFlow from ViewModel
     val name by viewModel.name.collectAsState()

@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.claymation.retopropio.Screens.BuenasNotScreen
 import com.claymation.retopropio.Screens.CasosScreen
 import com.claymation.retopropio.Screens.ChatbotScreen
 import com.claymation.retopropio.Screens.CivilScreen
@@ -20,6 +21,7 @@ import com.claymation.retopropio.Screens.FamiliarScreen
 import com.claymation.retopropio.Screens.GlosarioScreen
 import com.claymation.retopropio.Screens.HomeScreen
 import com.claymation.retopropio.Screens.LoginScreen
+import com.claymation.retopropio.Screens.MalasNotScreen
 import com.claymation.retopropio.Screens.MercantilScreen
 import com.claymation.retopropio.Screens.NoticiasScreen
 import com.claymation.retopropio.Screens.RegistroScreen
@@ -101,6 +103,15 @@ fun AppNavGraph(navController: NavHostController) {
             val topic = backStackEntry.arguments?.getString("topic") ?: ""
             RegistroScreen(navController, topic)
         }
+
+        composable("Buenas") {
+            BuenasNotScreen( navController)
+        }
+        composable("Malas") {
+            MalasNotScreen( navController)
+        }
+
+
 
         composable("Familiar") {
             FamiliarScreen( navController)

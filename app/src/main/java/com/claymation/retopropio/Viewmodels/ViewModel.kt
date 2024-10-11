@@ -239,6 +239,53 @@ class ViewModel : ViewModel() {
         })
     }
 
+
+    fun createCaso(context: Context, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        val currentEmail = _email.value
+
+
+        // Verificar que el email no esté vacío antes de hacer la solicitud
+        if (currentEmail.isEmpty()) {
+            _errorMessage.value = "El correo electrónico es necesario para crear un caso."
+            return
+        }
+        println("Email: $currentEmail")
+        val url = "https://bufetecapi.onrender.com/casos/$currentEmail"
+        val jsonObject = JSONObject().apply {
+            put("Status", 0)  // Establecer el valor de Status a 0
+        }
+
+        val requestBody = jsonObject.toString().toRequestBody("application/json".toMediaType())
+        val request = Request.Builder()
+            .url(url)
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    _errorMessage.value = "Error de red: ${e.message}"
+                    onFailure() // Callback en caso de fallo
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    response.use {  // Asegura que el cuerpo de la respuesta se cierre adecuadamente
+                        if (response.isSuccessful) {
+                            _errorMessage.value = null
+                            onSuccess() // Callback en caso de éxito
+                        } else {
+                            _errorMessage.value = "Error al crear el caso: ${response.message}"
+                            onFailure() // Callback en caso de fallo
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+
     // Function to log out the user
     fun logout(context: Context, onSuccess: () -> Unit) {
         viewModelScope.launch {

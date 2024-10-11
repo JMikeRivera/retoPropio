@@ -19,8 +19,10 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +43,12 @@ import com.claymation.retopropio.Viewmodels.ViewModel
 fun LoginScreen(navController: NavController?) {
     val viewModel: ViewModel = viewModel() // Usando el ViewModel llamado "ViewModel"
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    // Inicializando el ViewModel para cargar los datos del DataStore
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
 
     // Observing StateFlow from the ViewModel
     val email by viewModel.email.collectAsState()

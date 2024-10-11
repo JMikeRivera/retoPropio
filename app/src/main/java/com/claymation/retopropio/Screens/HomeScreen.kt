@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -42,12 +43,18 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.claymation.retopropio.R
+import com.claymation.retopropio.Viewmodels.ViewModel
 
 
 @Composable
 fun HomeScreen(navController: NavController?) {
+    val viewModel: ViewModel = viewModel() // Usando el ViewModel llamado "ViewModel"
+    val context = LocalContext.current
+    // Initialize the ViewModel
+    viewModel.initialize(context)
     Scaffold(
         topBar = { AppBarTop() },
         content = { innerPadding ->
@@ -239,7 +246,7 @@ fun ButtonSection(navController: NavController?) {
         Button(
             onClick = { /*TODO: navegar a ayuda con la seleccion*/
 
-                navController?.navigate("Casos")
+                navController?.navigate("Casos/H")
             },
             modifier = Modifier
                 .fillMaxWidth()
