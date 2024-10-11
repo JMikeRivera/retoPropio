@@ -140,5 +140,24 @@ fun LoginScreen(navController: NavController?) {
         ) {
             Text(text = "¿Aun no tienes cuenta? Registrate")
         }
+
+        Button(
+            onClick = {
+                viewModel.loginAsGuest(
+                    context = context,
+                    onSuccess = {
+                        navController?.navigate("HomeScreen")
+                    }
+                )
+            },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF539EFF))
+        ) {
+            Text(
+                text = "Ingresar como Invitado",
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+            )
+        }
     }
 }

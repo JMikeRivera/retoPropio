@@ -149,6 +149,18 @@ class ViewModel : ViewModel() {
         })
     }
 
+    // Function para iniciar sesión como invitado
+    fun loginAsGuest(context: Context, onSuccess: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            context.SaveLoggedInStatus(true)
+            viewModelScope.launch(Dispatchers.Main) {
+                _isLoggedIn.value = true
+                _errorMessage.value = null
+                onSuccess()
+            }
+        }
+    }
+
     // Function to register a user via API and store data in DataStore
     fun register(context: Context, onSuccess: () -> Unit, onFailure: () -> Unit) {
         val currentName = _name.value
