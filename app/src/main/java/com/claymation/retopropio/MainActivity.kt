@@ -7,9 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.claymation.retopropio.Screens.CasosScreen
 import com.claymation.retopropio.Screens.ChatbotScreen
 import com.claymation.retopropio.Screens.CivilScreen
@@ -82,9 +84,22 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
 
-        // Pantalla de Glosario
-        composable("Casos") {
-            CasosScreen( navController)  // Puedes pasar el ViewModel si es necesario
+        // Pantalla de Casos, ahora acepta un parámetro "topic"
+        composable(
+            route = "Casos/{topic}",
+            arguments = listOf(navArgument("topic") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val topic = backStackEntry.arguments?.getString("topic") ?: ""
+            CasosScreen(navController, topic)
+        }
+
+        // Pantalla de Registro, también acepta el parámetro "topic"
+        composable(
+            route = "Registro/{topic}",
+            arguments = listOf(navArgument("topic") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val topic = backStackEntry.arguments?.getString("topic") ?: ""
+            RegistroScreen(navController, topic)
         }
 
         composable("Familiar") {
@@ -96,9 +111,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable("Civil") {
             CivilScreen( navController)
         }
-        composable("Registro"){
-            RegistroScreen(navController, "Legal Topics")
-        }
+
 
 
     }

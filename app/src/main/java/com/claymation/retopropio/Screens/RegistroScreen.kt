@@ -1,3 +1,4 @@
+// RegistroScreen.kt
 package com.claymation.retopropio.Screens
 
 import androidx.compose.foundation.layout.Column
@@ -27,14 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 
 @Composable
-fun RegistroScreen(navController: NavController?, topic: String) {
+fun RegistroScreen(navController: NavController, topic: String) {
     var esDeNuevoLeon by remember { mutableStateOf(false) }
     var edad by remember { mutableStateOf(0f) }
     var ingresoMensual by remember { mutableStateOf(0f) }
@@ -48,7 +48,7 @@ fun RegistroScreen(navController: NavController?, topic: String) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TituloFormulario()
+        TituloFormulario(topic)
 
         SeccionFormulario(
             titulo = "¿Eres de Nuevo León?",
@@ -161,9 +161,9 @@ fun RegistroScreen(navController: NavController?, topic: String) {
 }
 
 @Composable
-fun TituloFormulario() {
+fun TituloFormulario(topic: String) {
     Text(
-        text = "Formulario de Datos",
+        text = "Formulario de Datos - $topic",
         style = MaterialTheme.typography.headlineSmall,
         color = Color(0xFF0277BD),
         fontWeight = FontWeight.Bold,
@@ -234,10 +234,4 @@ fun SeccionFormulario(titulo: String, contenido: @Composable () -> Unit) {
             contenido()
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegistroScreen() {
-    RegistroScreen(null, "Legal Topics")
 }

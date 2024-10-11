@@ -1,5 +1,6 @@
 package com.claymation.retopropio.Screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,12 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun CivilScreen(navController: NavController?){
+fun CivilScreen(navController: NavController) {
 
     Column(
         modifier = Modifier
@@ -31,11 +31,11 @@ fun CivilScreen(navController: NavController?){
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            text = "Selecciona una Sección",
+            text = "Selecciona un Caso",
             style = MaterialTheme.typography.headlineSmall,
             color = Color(0xFF0277BD),
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 50.dp, bottom = 16.dp),
+            modifier = Modifier.padding(bottom = 16.dp),
             textAlign = TextAlign.Center
         )
 
@@ -49,16 +49,44 @@ fun CivilScreen(navController: NavController?){
             Caso("Incumplimiento de contratos de servicios funerarios", "Casos relacionados con el incumplimiento de contratos de servicios funerarios.")
         )
 
-
         MostrarCasos(casos = casos, navController)
 
         Spacer(modifier = Modifier.height(16.dp))
+    }
+}
 
+@Composable
+private fun MostrarCasos(casos: List<Caso>, navController: NavController) {
+    Column {
+        casos.forEach { caso ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        navController.navigate("Registro/${caso.nombre.replace(" ", "")}")
+                    }
+                    .padding(vertical = 8.dp),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFE1F5FE)
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = caso.nombre,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color(0xFF0288D1),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = caso.descripcion,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color(0xFF0277BD)
+                    )
+                }
+            }
         }
     }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewCivilScreenn() {
-    CivilScreen(null)
 }

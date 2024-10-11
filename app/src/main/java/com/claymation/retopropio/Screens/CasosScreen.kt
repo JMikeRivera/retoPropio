@@ -20,10 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-
 
 enum class TipoDerecho {
     DERECHO_CIVIL, DERECHO_PENAL, DERECHO_FAMILIAR
@@ -32,7 +30,7 @@ enum class TipoDerecho {
 data class Caso(val nombre: String, val descripcion: String)
 
 @Composable
-fun CasosScreen(navController: NavController?) {
+fun CasosScreen(navController: NavController, topic: String) {
     var selectedSection by remember { mutableStateOf<TipoDerecho?>(null) }
 
     Column(
@@ -45,7 +43,7 @@ fun CasosScreen(navController: NavController?) {
             style = MaterialTheme.typography.headlineSmall,
             color = Color(0xFF0277BD),
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 50.dp, bottom = 16.dp),
+            modifier = Modifier.padding(bottom = 16.dp),
             textAlign = TextAlign.Center
         )
 
@@ -74,7 +72,7 @@ fun SeccionDerecho(nombreSeccion: String, onClick: () -> Unit) {
             .clickable { onClick() },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFE1F5FE) // Azul claro para las tarjetas
+            containerColor = Color(0xFFE1F5FE)
         )
     ) {
         Column(
@@ -91,50 +89,53 @@ fun SeccionDerecho(nombreSeccion: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun MostrarCasosDerechoCivil(navController: NavController?) {
+fun MostrarCasosDerechoCivil(navController: NavController) {
     val casos = listOf(
         Caso("Contrato de compraventa", "Resolución de conflictos relacionados con compraventas."),
         Caso("Arrendamiento", "Casos de arrendamiento y derechos de inquilinos."),
         Caso("Sucesiones", "Procesos de herencias y sucesiones.")
     )
 
-    MostrarCasos(casos,navController)
+    MostrarCasos(casos, navController)
 }
 
 @Composable
-fun MostrarCasosDerechoPenal(navController: NavController?) {
+fun MostrarCasosDerechoPenal(navController: NavController) {
     val casos = listOf(
         Caso("Delitos menores", "Defensa en casos de delitos menores."),
         Caso("Delitos graves", "Casos que involucran delitos graves."),
         Caso("Fraude", "Procesos penales relacionados con fraudes.")
     )
 
-    MostrarCasos(casos,navController)
+    MostrarCasos(casos, navController)
 }
 
 @Composable
-fun MostrarCasosDerechoFamiliar(navController: NavController?) {
+fun MostrarCasosDerechoFamiliar(navController: NavController) {
     val casos = listOf(
         Caso("Divorcio", "Procesos legales de divorcio."),
         Caso("Custodia de menores", "Casos relacionados con la custodia de hijos."),
         Caso("Adopciones", "Procesos legales de adopción.")
     )
 
-    MostrarCasos(casos,navController)
+    MostrarCasos(casos, navController)
 }
 
 @Composable
-fun MostrarCasos(casos: List<Caso>, navController: NavController?) {
+private fun MostrarCasos(casos: List<Caso>, navController: NavController) {
     Column {
         casos.forEach { caso ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        navController?.navigate("Registro")  // Navigate to detail screen on click
+                        navController.navigate("Registro/${caso.nombre}")
                     }
                     .padding(vertical = 8.dp),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFE1F5FE)
+                )
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -142,22 +143,16 @@ fun MostrarCasos(casos: List<Caso>, navController: NavController?) {
                     Text(
                         text = caso.nombre,
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color(0xFF0288D1), // Azul oscuro para el título del caso
+                        color = Color(0xFF0288D1),
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = caso.descripcion,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFF0277BD) // Azul más oscuro para la descripción
+                        color = Color(0xFF0277BD)
                     )
                 }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewCasosScreen() {
-    CasosScreen(null)
 }
