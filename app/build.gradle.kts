@@ -64,8 +64,8 @@ android {
 }
 
 dependencies {
-    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation(libs.generativeai)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.core.ktx)
     implementation(libs.okhttp)
     implementation(libs.androidx.lifecycle.runtime.ktx)
