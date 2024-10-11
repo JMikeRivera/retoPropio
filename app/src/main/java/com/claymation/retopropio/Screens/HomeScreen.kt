@@ -232,7 +232,7 @@ fun ButtonSection(navController: NavController?) {
         Button(
             onClick = { /*TODO: navegar a ayuda con la seleccion*/
 
-                navController?.navigate("Glosario")
+                navController?.navigate("Casos")
             },
             modifier = Modifier
                 .fillMaxWidth()

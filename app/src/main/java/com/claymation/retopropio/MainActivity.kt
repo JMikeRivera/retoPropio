@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.claymation.retopropio.Screens.CasosScreen
 import com.claymation.retopropio.Screens.ChatbotScreen
 import com.claymation.retopropio.Screens.ClientDataScreen
 import com.claymation.retopropio.Screens.GlosarioScreen
@@ -76,6 +77,11 @@ fun AppNavGraph(navController: NavHostController) {
             GlosarioScreen( navController)  // Puedes pasar el ViewModel si es necesario
         }
 
+
+        // Pantalla de Glosario
+        composable("Casos") {
+            CasosScreen( navController)  // Puedes pasar el ViewModel si es necesario
+        }
 
     }
 }
