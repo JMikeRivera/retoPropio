@@ -2,15 +2,20 @@ package com.claymation.retopropio.Screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -22,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -44,53 +50,69 @@ fun GlosarioScreen(navController: NavController?){
         abogado.nombre.contains(searchText, ignoreCase = true)
     }
 
-
     LaunchedEffect(Unit) {
         abogados = obtenerAbogadosConPermiso2()
     }
+    Scaffold(
+        topBar = { AppBarTop() },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Spacer(modifier = Modifier.height(60.dp))
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        TextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            label = { Text("Buscar abogado") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
 
-        )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    TextField(
+                        value = searchText,
+                        onValueChange = { searchText = it },
+                        label = { Text("Buscar abogado") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
 
-        Text(
-            text = "Lista de Abogados",
-            style = MaterialTheme.typography.headlineSmall,
-            color = Color(0xFF0277BD),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+                    )
 
-        if (abogadosFiltrados.isEmpty()) {
-            Text(
-                text = "No se encontró ningún abogado",
-                style = MaterialTheme.typography.bodyLarge, // bodyLarge en vez de body1
-                color = Color(0xFF0277BD), // Azul oscuro para el mensaje de no resultados
-                modifier = Modifier.padding(8.dp)
-            )
-        } else {
-            abogadosFiltrados.forEach { abogado ->
-                AbogadoItem(abogado) { seleccionado ->
-                    abogadoSeleccionado = seleccionado
+                    Text(
+                        text = "Lista de Abogados",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = Color(0xFF0277BD),
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    if (abogadosFiltrados.isEmpty()) {
+                        Text(
+                            text = "No se encontró ningún abogado",
+                            style = MaterialTheme.typography.bodyLarge, // bodyLarge en vez de body1
+                            color = Color(0xFF0277BD), // Azul oscuro para el mensaje de no resultados
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    } else {
+                        abogadosFiltrados.forEach { abogado ->
+                            AbogadoItem(abogado) { seleccionado ->
+                                abogadoSeleccionado = seleccionado
+                            }
+                        }
+                    }
+
+                    abogadoSeleccionado?.let { abogado ->
+                        AbogadoInfoDialog(abogado = abogado, onDismiss = { abogadoSeleccionado = null })
+                    }
                 }
-            }
-        }
 
-        abogadoSeleccionado?.let { abogado ->
-            AbogadoInfoDialog(abogado = abogado, onDismiss = { abogadoSeleccionado = null })
-        }
-    }
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        },
+        bottomBar = { AppBarBottom(modifier = Modifier, navController) }
+    )
 }
 
 

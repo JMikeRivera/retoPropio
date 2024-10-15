@@ -13,6 +13,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,7 +33,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.claymation.retopropio.Viewmodels.ViewModel as MyViewModel
 
-
 @Composable
 fun FamiliarScreen(navController: NavController) {
     val context = LocalContext.current
@@ -49,41 +49,54 @@ fun FamiliarScreen(navController: NavController) {
     var selectedSection by remember { mutableStateOf<TipoDerecho?>(null) }
 
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Text(
-            text = "Selecciona un Caso",
-            style = MaterialTheme.typography.headlineSmall,
-            color = Color(0xFF0277BD),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp),
-            textAlign = TextAlign.Center
-        )
 
-        val casos = listOf(
-            Caso("Divorcios", "Procesos legales de divorcio."),
-            Caso("Rectificaciones de Acta", "Casos sobre la corrección de nombre, fechas o género en actas."),
-            Caso("Pensiones Alimenticias", "Procesos relacionados con el otorgamiento o modificación de pensiones alimenticias."),
-            Caso("Convivencias", "Casos relacionados con la regulación de convivencias familiares."),
-            Caso("Custodia", "Procesos sobre la custodia de menores."),
-            Caso("Reconocimiento de Paternidad", "Casos de reconocimiento legal de paternidad."),
-            Caso("Nombramiento de Tutor", "Procesos de nombramiento de tutores legales."),
-            Caso("Cancelación Acta de Nacimiento", "Procesos legales para la cancelación de actas de nacimiento."),
-            Caso("Registros Extemporáneos", "Casos de registro tardío de nacimientos."),
-            Caso("Identidad de Nombre", "Procesos legales sobre la identidad de nombre."),
-            Caso("Adopciones (sujeto a estudio)", "Procesos de adopción que requieren un estudio previo."),
-            Caso("Incidentes Reducción, Aumento o Cancelación de pensión alimenticia", "Casos relacionados con cambios en las pensiones alimenticias.")
-        )
+    Scaffold(
+        topBar = { AppBarTop() },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
 
-        MostrarCasos(casos = casos, navController = navController, isLoggedIn = isLoggedIn)
+                Spacer(modifier = Modifier.height(24.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
-    }
+                Text(
+                    text = "Selecciona un Caso",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color(0xFF0277BD),
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(bottom = 16.dp),
+                    textAlign = TextAlign.Center
+                )
+
+                val casos = listOf(
+                    Caso("Divorcios", "Procesos legales de divorcio."),
+                    Caso("Rectificaciones de Acta", "Casos sobre la corrección de nombre, fechas o género en actas."),
+                    Caso("Pensiones Alimenticias", "Procesos relacionados con el otorgamiento o modificación de pensiones alimenticias."),
+                    Caso("Convivencias", "Casos relacionados con la regulación de convivencias familiares."),
+                    Caso("Custodia", "Procesos sobre la custodia de menores."),
+                    Caso("Reconocimiento de Paternidad", "Casos de reconocimiento legal de paternidad."),
+                    Caso("Nombramiento de Tutor", "Procesos de nombramiento de tutores legales."),
+                    Caso("Cancelación Acta de Nacimiento", "Procesos legales para la cancelación de actas de nacimiento."),
+                    Caso("Registros Extemporáneos", "Casos de registro tardío de nacimientos."),
+                    Caso("Identidad de Nombre", "Procesos legales sobre la identidad de nombre."),
+                    Caso("Adopciones (sujeto a estudio)", "Procesos de adopción que requieren un estudio previo."),
+                    Caso("Incidentes Reducción, Aumento o Cancelación de pensión alimenticia", "Casos relacionados con cambios en las pensiones alimenticias.")
+                )
+
+                MostrarCasos(casos = casos, navController = navController, isLoggedIn = isLoggedIn)
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+        },
+        bottomBar = { AppBarBottom(modifier = Modifier, navController) }
+    )
 }
+
 
 // Añade la función MostrarCasos dentro de MercantilScreen.kt
 @Composable

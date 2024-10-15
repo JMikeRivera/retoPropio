@@ -13,6 +13,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -47,33 +48,45 @@ fun MercantilScreen(navController: NavController) {
 
     var selectedSection by remember { mutableStateOf<TipoDerecho?>(null) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Text(
-            text = "Selecciona un Caso",
-            style = MaterialTheme.typography.headlineSmall,
-            color = Color(0xFF0277BD),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(bottom = 16.dp),
-            textAlign = TextAlign.Center
-        )
 
-        val casos = listOf(
-            Caso("Cargos No Reconocidos", "Procesos para la reclamación de cargos no reconocidos en cuentas o tarjetas."),
-            Caso("Reclamaciones Ante CONDUSEF", "Casos de reclamaciones y quejas ante la CONDUSEF."),
-            Caso("Reclamaciones Ante PROFECO", "Casos de reclamaciones y quejas ante la PROFECO."),
-            Caso("Titulos De Credito", "Procesos legales relacionados con el manejo y reclamación de títulos de crédito.")
-        )
 
-        MostrarCasos(casos = casos, navController = navController, isLoggedIn = isLoggedIn)
+    Scaffold(
+        topBar = { AppBarTop() },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
 
-        Spacer(modifier = Modifier.height(16.dp))
-    }
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = "Selecciona un Caso",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color(0xFF0277BD),
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(bottom = 16.dp),
+                    textAlign = TextAlign.Center
+                )
+
+                val casos = listOf(
+                    Caso("Cargos No Reconocidos", "Procesos para la reclamación de cargos no reconocidos en cuentas o tarjetas."),
+                    Caso("Reclamaciones Ante CONDUSEF", "Casos de reclamaciones y quejas ante la CONDUSEF."),
+                    Caso("Reclamaciones Ante PROFECO", "Casos de reclamaciones y quejas ante la PROFECO."),
+                    Caso("Titulos De Credito", "Procesos legales relacionados con el manejo y reclamación de títulos de crédito.")
+                )
+
+                MostrarCasos(casos = casos, navController = navController, isLoggedIn = isLoggedIn)
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+        },
+        bottomBar = { AppBarBottom(modifier = Modifier, navController) }
+    )
 }
 
 // Añade la función MostrarCasos dentro de MercantilScreen.kt
@@ -140,3 +153,5 @@ private fun MostrarCasos(casos: List<Caso>, navController: NavController, isLogg
         )
     }
 }
+
+

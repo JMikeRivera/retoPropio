@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -137,18 +138,18 @@ fun HomeScreen(navController: NavController?) {
                     )
                 }            }
         },
-        bottomBar = { AppBarBottom(navController) }
+        bottomBar = { AppBarBottom(modifier = Modifier, navController) }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBarTop() {
+fun AppBarTop(modifier: Modifier = Modifier) {
     CenterAlignedTopAppBar(
         title = {
             Text(
                 text = "BufeTec",
-                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
             )
         },
         modifier = Modifier
@@ -161,15 +162,16 @@ fun AppBarTop() {
                 )
             ),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = Color.Transparent,
-            titleContentColor = Color.White
+            containerColor = Color.Transparent, // Transparent to see gradient
+            titleContentColor = Color.White // White text color
         )
     )
+
 }
 
 
 @Composable
-fun AppBarBottom( navController: NavController?) {
+fun AppBarBottom(modifier: Modifier = Modifier, navController: NavController?) {
     BottomAppBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -180,7 +182,7 @@ fun AppBarBottom( navController: NavController?) {
             onClick = { /* TODO: Handle click for Procesos */ },
             modifier = Modifier.weight(1f)
         ) {
-            Icon(painterResource(id = R.drawable.ic_process), contentDescription = "Procesos")
+            Icon(painterResource(id = R.drawable.ic_process), contentDescription = "CasosScreen")
         }
         IconButton(
             onClick = { /* TODO: Handle click for Bufete */
@@ -200,9 +202,17 @@ fun AppBarBottom( navController: NavController?) {
         ) {
             Icon(painterResource(id = R.drawable.ic_buffet), contentDescription = "Bufete")
         }
+        IconButton(
+            onClick = {
+                //navegar a home
+                navController?.navigate("HomeScreen")
+            },
+            modifier = Modifier.weight(1f)
+        ) {
+            Icon(painterResource(id = R.drawable.ic_home), contentDescription = "Bufete")
+        }
     }
 }
-
 
 @Composable
 fun ButtonSection(navController: NavController?) {
