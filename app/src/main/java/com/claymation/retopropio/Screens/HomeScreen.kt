@@ -179,12 +179,6 @@ fun AppBarBottom(modifier: Modifier = Modifier, navController: NavController?) {
         containerColor = Color(0xFFF5F5F5)
     ) {
         IconButton(
-            onClick = { /* TODO: Handle click for Procesos */ },
-            modifier = Modifier.weight(1f)
-        ) {
-            Icon(painterResource(id = R.drawable.ic_process), contentDescription = "CasosScreen")
-        }
-        IconButton(
             onClick = { /* TODO: Handle click for Bufete */
                 navController?.navigate("Noticias")
 
@@ -192,6 +186,16 @@ fun AppBarBottom(modifier: Modifier = Modifier, navController: NavController?) {
             modifier = Modifier.weight(1f)
         ) {
             Icon(painterResource(id = R.drawable.ic_search), contentDescription = "Buscar")
+        }
+
+        IconButton(
+            onClick = {
+                //navegar a home
+                navController?.navigate("HomeScreen")
+            },
+            modifier = Modifier.weight(1f)
+        ) {
+            Icon(painterResource(id = R.drawable.ic_home), contentDescription = "Home")
         }
         IconButton(
             onClick = {
@@ -201,15 +205,6 @@ fun AppBarBottom(modifier: Modifier = Modifier, navController: NavController?) {
             modifier = Modifier.weight(1f)
         ) {
             Icon(painterResource(id = R.drawable.ic_buffet), contentDescription = "Bufete")
-        }
-        IconButton(
-            onClick = {
-                //navegar a home
-                navController?.navigate("HomeScreen")
-            },
-            modifier = Modifier.weight(1f)
-        ) {
-            Icon(painterResource(id = R.drawable.ic_home), contentDescription = "Bufete")
         }
     }
 }
@@ -315,7 +310,7 @@ fun TestimonialSection() {
         ) {
             Text(
                 style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF434343)),
-                text = "\" Gracias a BufeTec, por fin pude ver a mi hija después de 5 años \""
+                text = "\" Nuestro Equipo de Abogados estan Comprometidos con la Excelencia \""
             )
         }
     }

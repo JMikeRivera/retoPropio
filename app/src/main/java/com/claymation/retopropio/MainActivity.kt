@@ -111,8 +111,6 @@ fun AppNavGraph(navController: NavHostController) {
             MalasNotScreen( navController)
         }
 
-
-
         composable("Familiar") {
             FamiliarScreen( navController)
         }
@@ -122,8 +120,6 @@ fun AppNavGraph(navController: NavHostController) {
         composable("Civil") {
             CivilScreen( navController)
         }
-
-
 
     }
 }

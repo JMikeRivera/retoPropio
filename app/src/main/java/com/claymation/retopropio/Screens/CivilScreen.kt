@@ -48,7 +48,7 @@ fun CivilScreen(navController: NavController) {
 
     Scaffold(
         topBar = { AppBarTop() },
-        content = { innerPadding ->
+        content = {
         Column(
             modifier = Modifier
                 .fillMaxSize()
