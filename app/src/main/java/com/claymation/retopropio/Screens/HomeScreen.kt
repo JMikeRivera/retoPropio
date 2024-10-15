@@ -200,7 +200,7 @@ fun AppBarBottom(modifier: Modifier = Modifier, navController: NavController?) {
         IconButton(
             onClick = {
             //navegar a la chabotscreen
-                navController?.navigate("ChatBotScreen")
+                navController?.navigate("test")
             },
             modifier = Modifier.weight(1f)
         ) {

@@ -1,6 +1,9 @@
 package com.claymation.retopropio.Viewmodels
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.claymation.retopropio.Datastore.SaveEmail
@@ -295,3 +298,18 @@ class ViewModel : ViewModel() {
         }
     }
 }
+
+    fun sendEmail(context: Context) {
+        val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf("recipient@example.com"))
+            putExtra(Intent.EXTRA_SUBJECT, "Subject Here")
+            putExtra(Intent.EXTRA_TEXT, "Body of the email here.")
+        }
+
+        if (emailIntent.resolveActivity(context.packageManager) != null) {
+            context.startActivity(emailIntent)
+        } else {
+            Toast.makeText(context, "No email client installed", Toast.LENGTH_SHORT).show()
+        }
+    }
