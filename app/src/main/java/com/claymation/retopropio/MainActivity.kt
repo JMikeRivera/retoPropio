@@ -1,5 +1,6 @@
 package com.claymation.retopropio
 
+import NoticiaDetalleScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -123,6 +124,14 @@ fun AppNavGraph(navController: NavHostController) {
         }
         composable("test"){
             test(navController)
+        }
+
+        composable(
+            route = "NoticiaDetalle/{noticiaId}",
+            arguments = listOf(navArgument("noticiaId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val noticiaId = backStackEntry.arguments?.getInt("noticiaId") ?: 0
+            NoticiaDetalleScreen(noticiaId = noticiaId, navController = navController)
         }
 
     }

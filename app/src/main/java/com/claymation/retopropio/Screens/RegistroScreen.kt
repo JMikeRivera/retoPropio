@@ -1,6 +1,7 @@
 // RegistroScreen.kt
 package com.claymation.retopropio.Screens
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,6 +50,7 @@ fun RegistroScreen(navController: NavController, topic: String) {
     var esValido by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val viewModel: MyViewModel = viewModel()
+
 
     // Inicializar el ViewModel si aún no lo has hecho
     LaunchedEffect(Unit) {
@@ -171,6 +173,7 @@ fun RegistroScreen(navController: NavController, topic: String) {
 
                         }
                     )
+                    sendEmail(context,email)
                 }
                 else {
                     println("Los datos no son válidos")
@@ -266,3 +269,16 @@ fun SeccionFormulario(titulo: String, contenido: @Composable () -> Unit) {
     }
 }
 
+
+fun sendEmail(context: Context, userEmail: String) {
+    val senderEmail = "smikerivera@gmail.com"  // Sender's email
+    val password = "vkhd zuim skkq rqlm"       // App password (use the correct app password)
+    val recipientEmail = "a00836995@tec.mx"    // Recipient's email
+    val subject = "Nuevo Caso Recibido"
+
+    // Use the user's email in the body of the email
+    val body = "Hola abogado, llego un nuevo caso de $userEmail"
+
+    // Sending the email
+    SendEmailTask(senderEmail, password, recipientEmail, subject, body).execute()
+}

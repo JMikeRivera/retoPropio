@@ -22,6 +22,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
@@ -57,6 +58,11 @@ class ViewModel : ViewModel() {
 
     private val client = OkHttpClient()
 
+    // Añadido: StateFlow para mantener la lista de noticias
+    private val _noticias = MutableStateFlow<List<Noticia>>(emptyList())
+    val noticias: StateFlow<List<Noticia>> get() = _noticias
+
+
     // Initialize the ViewModel and load the authentication status
     fun initialize(context: Context) {
         // Observa el Flow del estado de autenticación y actualiza _isLoggedIn
@@ -73,6 +79,17 @@ class ViewModel : ViewModel() {
             }
         }
     }
+
+    data class Noticia(
+        val Noticia_id: Int,
+        val Nombre: String,
+        val Descripcion: String,
+        val Link: String,
+        val IsVideo: Boolean
+    )
+
+
+
 
     // Functions to update StateFlow fields
     fun updateEmail(newEmail: String) {
@@ -297,7 +314,62 @@ class ViewModel : ViewModel() {
             onSuccess()
         }
     }
-}
+
+    // Añadido: Función para obtener las noticias desde la API
+    fun fetchNoticias() {
+        val url = "https://ndba.onrender.com/noticias"
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                // Manejo de errores
+                viewModelScope.launch(Dispatchers.Main) {
+                    _errorMessage.value = "Error al obtener noticias: ${e.message}"
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use { res ->
+                    if (!res.isSuccessful) {
+                        viewModelScope.launch(Dispatchers.Main) {
+                            _errorMessage.value = "Error al obtener noticias: ${res.message}"
+                        }
+                        return
+                    }
+
+                    val responseBody = res.body?.string()
+                    if (responseBody != null) {
+                        try {
+                            val jsonArray = JSONArray(responseBody)
+                            val noticiasList = mutableListOf<Noticia>()
+                            for (i in 0 until jsonArray.length()) {
+                                val jsonObject = jsonArray.getJSONObject(i)
+                                val noticia = Noticia(
+                                    Noticia_id = jsonObject.getInt("Noticia_id"),
+                                    Nombre = jsonObject.getString("Nombre"),
+                                    Descripcion = jsonObject.getString("Descripcion"),
+                                    Link = jsonObject.getString("Link"),
+                                    IsVideo = jsonObject.getBoolean("IsVideo")
+                                )
+                                noticiasList.add(noticia)
+                            }
+                            // Actualizar el StateFlow con la lista de noticias
+                            viewModelScope.launch(Dispatchers.Main) {
+                                _noticias.value = noticiasList
+                            }
+                        } catch (e: Exception) {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                _errorMessage.value = "Error al procesar las noticias."
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
 
     fun sendEmail(context: Context) {
         val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
@@ -313,3 +385,68 @@ class ViewModel : ViewModel() {
             Toast.makeText(context, "No email client installed", Toast.LENGTH_SHORT).show()
         }
     }
+
+    init {
+        fetchNoticias()
+    }
+
+
+
+
+    // Nueva función para enviar preguntas a la API
+    fun sendQuestionToAPI(question: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
+        if (question.isEmpty()) {
+            _errorMessage.value = "La pregunta no puede estar vacía."
+            return
+        }
+
+        val url = "https://coco-zjyd.onrender.com/api/ask"
+        val jsonObject = JSONObject().apply {
+            put("question", question)  // Envía la pregunta en formato JSON
+        }
+
+        val requestBody = jsonObject.toString().toRequestBody("application/json".toMediaType())
+        val request = Request.Builder()
+            .url(url)
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    _errorMessage.value = "Error de red: ${e.message}"
+                    onFailure("Error de red: ${e.message}")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {  // Asegura que el cuerpo de la respuesta se cierre adecuadamente
+                    if (response.isSuccessful) {
+                        val responseBody = response.body?.string()
+                        if (responseBody != null) {
+                            val jsonResponse = JSONObject(responseBody)
+                            val botResponse = jsonResponse.getString("response")
+
+                            viewModelScope.launch(Dispatchers.Main) {
+                                _errorMessage.value = null
+                                onSuccess(botResponse)  // Envía la respuesta del bot
+                            }
+                        } else {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                _errorMessage.value = "Respuesta vacía del servidor."
+                                onFailure("Respuesta vacía del servidor.")
+                            }
+                        }
+                    } else {
+                        viewModelScope.launch(Dispatchers.Main) {
+                            _errorMessage.value = "Error en la solicitud: ${response.message}"
+                            onFailure("Error en la solicitud: ${response.message}")
+                        }
+                    }
+                }
+            }
+        })
+    }
+}
+
+

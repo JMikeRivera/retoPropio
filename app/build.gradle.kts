@@ -63,17 +63,19 @@ android {
             excludes += "META-INF/LICENSE.md"
         }
     }
-
 }
 
 dependencies {
     implementation(libs.generativeai)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.core.ktx)
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.sun.mail:android-mail:1.6.7")
-    implementation("com.sun.mail:android-activation:1.6.7")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation(libs.okhttp)
+    implementation(libs.coil.compose)
+    implementation("androidx.media3:media3-exoplayer:1.1.0")
+    implementation("androidx.media3:media3-ui:1.1.0")
+    implementation(libs.android.mail)
+    implementation(libs.android.activation)
+    implementation(libs.exoplayer)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

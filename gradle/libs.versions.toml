@@ -1,6 +1,9 @@
 [versions]
 agp = "8.5.1"
+androidActivation = "1.6.7"
+coilCompose = "2.7.0"
 datastorePreferences = "1.1.1"
+exoplayer = "2.19.1"
 generativeai = "0.9.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -16,8 +19,12 @@ runtimeLivedata = "1.7.3"
 datastoreCoreAndroid = "1.1.1"
 
 [libraries]
+android-activation = { module = "com.sun.mail:android-activation", version.ref = "androidActivation" }
+android-mail = { module = "com.sun.mail:android-mail", version.ref = "androidActivation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoplayer" }
 generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "generativeai" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
