@@ -271,8 +271,8 @@ fun SeccionFormulario(titulo: String, contenido: @Composable () -> Unit) {
 
 
 fun sendEmail(context: Context, userEmail: String) {
-    val senderEmail = "smikerivera@gmail.com"  // Sender's email
-    val password = "vkhd zuim skkq rqlm"       // App password (use the correct app password)
+    val senderEmail = "ejemplosender@gmail.com"  // Sender's email
+    val password = "mslu ytvb ayeo cmwo"       // App password (use the correct app password)
     val recipientEmail = "a00836995@tec.mx"    // Recipient's email
     val subject = "Nuevo Caso Recibido"
 
