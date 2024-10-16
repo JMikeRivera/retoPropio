@@ -26,6 +26,14 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
+data class Noticia(
+    val Noticia_id: Int,
+    val Nombre: String,
+    val Descripcion: String,
+    val Link: String,
+    val IsVideo: Boolean
+)
+
 class ViewModel : ViewModel() {
     // MutableStateFlows to hold email, password, and other fields for registration
     private val _email = MutableStateFlow("")
@@ -56,12 +64,11 @@ class ViewModel : ViewModel() {
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> get() = _isLoggedIn
 
-    private val client = OkHttpClient()
-
-    // Añadido: StateFlow para mantener la lista de noticias
+    // StateFlow para mantener la lista de noticias
     private val _noticias = MutableStateFlow<List<Noticia>>(emptyList())
     val noticias: StateFlow<List<Noticia>> get() = _noticias
 
+    private val client = OkHttpClient()
 
     // Initialize the ViewModel and load the authentication status
     fun initialize(context: Context) {
@@ -79,17 +86,6 @@ class ViewModel : ViewModel() {
             }
         }
     }
-
-    data class Noticia(
-        val Noticia_id: Int,
-        val Nombre: String,
-        val Descripcion: String,
-        val Link: String,
-        val IsVideo: Boolean
-    )
-
-
-
 
     // Functions to update StateFlow fields
     fun updateEmail(newEmail: String) {
@@ -315,7 +311,7 @@ class ViewModel : ViewModel() {
         }
     }
 
-    // Añadido: Función para obtener las noticias desde la API
+    // Función para obtener las noticias desde la API
     fun fetchNoticias() {
         val url = "https://ndba.onrender.com/noticias"
         val request = Request.Builder()

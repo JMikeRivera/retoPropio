@@ -1,6 +1,5 @@
 package com.claymation.retopropio
 
-import NoticiaDetalleScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +23,7 @@ import com.claymation.retopropio.Screens.HomeScreen
 import com.claymation.retopropio.Screens.LoginScreen
 import com.claymation.retopropio.Screens.MalasNotScreen
 import com.claymation.retopropio.Screens.MercantilScreen
+import com.claymation.retopropio.Screens.NoticiaDetalleScreen
 import com.claymation.retopropio.Screens.NoticiasScreen
 import com.claymation.retopropio.Screens.RegistroScreen
 import com.claymation.retopropio.Screens.SignupScreen
@@ -121,8 +121,6 @@ fun AppNavGraph(navController: NavHostController) {
         composable("Civil") {
             CivilScreen( navController)
         }
-
-
         composable(
             route = "NoticiaDetalle/{noticiaId}",
             arguments = listOf(navArgument("noticiaId") { type = NavType.IntType })
@@ -130,7 +128,6 @@ fun AppNavGraph(navController: NavHostController) {
             val noticiaId = backStackEntry.arguments?.getInt("noticiaId") ?: 0
             NoticiaDetalleScreen(noticiaId = noticiaId, navController = navController)
         }
-
     }
 }
 

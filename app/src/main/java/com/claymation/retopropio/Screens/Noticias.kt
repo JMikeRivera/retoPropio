@@ -1,105 +1,119 @@
 package com.claymation.retopropio.Screens
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.claymation.retopropio.Viewmodels.Noticia
 import com.claymation.retopropio.Viewmodels.ViewModel
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.statusBarsPadding
 
 @Composable
 fun NoticiasScreen(navController: NavController?) {
     val viewModel: ViewModel = viewModel()
     val noticias by viewModel.noticias.collectAsState()
-    val context = LocalContext.current
 
-    // Patrón de 2 pequeños a la izquierda, 1 grande a la derecha, etc.
-    val gridItems = mutableListOf<ViewModel.Noticia>()
-    gridItems.addAll(noticias)
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
     ) {
-        itemsIndexed(gridItems) { index, noticia ->
-            when {
-                index % 3 == 0 -> { // Primer elemento grande
-                    NoticiaCardGrande(noticia = noticia, onClick = {
-                        navController?.navigate("NoticiaDetalle/${noticia.Noticia_id}")
-                    })
-                }
-                else -> { // Elementos pequeños
-                    NoticiaCardPequena(noticia = noticia, onClick = {
-                        navController?.navigate("NoticiaDetalle/${noticia.Noticia_id}")
-                    })
-                }
+        // Fondo degradado que abarca la barra de estado
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            Color(0xFF40D2FF),
+                            Color(0xFF0062FF)
+                        )
+                    )
+                )
+                .statusBarsPadding()
+                .padding(16.dp)
+        ) {
+            // Título "Noticias" estilizado
+            Text(
+                text = "Noticias",
+                style = TextStyle(
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        }
+
+        // Lista de noticias con scroll vertical gestionado por LazyVerticalGrid
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .weight(1f)
+                .padding(16.dp),
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(noticias) { noticia ->
+                NoticiaCard(noticia = noticia, onClick = {
+                    navController?.navigate("NoticiaDetalle/${noticia.Noticia_id}")
+                })
             }
+        }
+
+        // Botón de regresar al HomeScreen en la parte inferior
+        Button(
+            onClick = { navController?.navigate("HomeScreen") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF539EFF))
+        ) {
+            Text(
+                text = "Regresar a Home",
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold),
+                color = Color.White
+            )
         }
     }
 }
 
 @Composable
-fun NoticiaCardGrande(noticia: ViewModel.Noticia, onClick: () -> Unit) {
-    val modifier = Modifier
-        .fillMaxWidth()
-        .aspectRatio(1.5f)
-        .clickable { onClick() }
-
-    if (noticia.IsVideo) {
-        VideoPlayer(videoUrl = noticia.Link, modifier = modifier)
-    } else {
-        ImageCard(noticia = noticia, modifier = modifier)
-    }
-}
-
-@Composable
-fun NoticiaCardPequena(noticia: ViewModel.Noticia, onClick: () -> Unit) {
+fun NoticiaCard(noticia: Noticia, onClick: () -> Unit) {
     val modifier = Modifier
         .fillMaxWidth()
         .aspectRatio(1f)
+        .border(2.dp, Color(0xFF4476DC), shape = RoundedCornerShape(8.dp))
         .clickable { onClick() }
 
-    if (noticia.IsVideo) {
-        // En caso de que se requiera, manejar videos en cuadros pequeños
-        VideoPlayer(videoUrl = noticia.Link, modifier = modifier)
-    } else {
-        ImageCard(noticia = noticia, modifier = modifier)
-    }
+    ImageCard(noticia = noticia, modifier = modifier)
 }
 
 @Composable
-fun ImageCard(noticia: ViewModel.Noticia, modifier: Modifier = Modifier) {
+fun ImageCard(noticia: Noticia, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Image(
             painter = rememberAsyncImagePainter(noticia.Link),
@@ -111,45 +125,15 @@ fun ImageCard(noticia: ViewModel.Noticia, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomStart)
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.6f))
+                .background(Color(0x800062FF))
                 .padding(4.dp)
         ) {
             Text(
                 text = noticia.Nombre,
-                style = MaterialTheme.typography.bodySmall,
+                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-        }
-    }
-}
-
-@Composable
-fun VideoPlayer(videoUrl: String, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val exoPlayer = remember {
-        ExoPlayer.Builder(context).build().apply {
-            val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
-            setMediaItem(mediaItem)
-            prepare()
-            playWhenReady = true
-        }
-    }
-
-    DisposableEffect(
-        AndroidView(
-            modifier = modifier,
-            factory = { ctx ->
-                // Usamos PlayerView de androidx.media3 en lugar de com.google.android.exoplayer2
-                androidx.media3.ui.PlayerView(ctx).apply {
-                    player = exoPlayer // Aquí ya no es necesario el cast
-                    useController = false
-                }
-            }
-        )
-    ) {
-        onDispose {
-            exoPlayer.release()
         }
     }
 }
