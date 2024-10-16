@@ -27,7 +27,6 @@ import com.claymation.retopropio.Screens.MercantilScreen
 import com.claymation.retopropio.Screens.NoticiasScreen
 import com.claymation.retopropio.Screens.RegistroScreen
 import com.claymation.retopropio.Screens.SignupScreen
-import com.claymation.retopropio.Screens.test
 import com.claymation.retopropio.ui.theme.RetoPropioTheme
 
 class MainActivity : ComponentActivity() {
@@ -122,9 +121,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable("Civil") {
             CivilScreen( navController)
         }
-        composable("test"){
-            test(navController)
-        }
+
 
         composable(
             route = "NoticiaDetalle/{noticiaId}",
