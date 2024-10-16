@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,6 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,67 +40,85 @@ data class ChatMessage(val message: String, val isUser: Boolean)
 
 @Composable
 fun ChatbotScreen(navController: NavController?, chatbotViewModel: ViewModel = viewModel()) {
-    var messages by remember { mutableStateOf<List<ChatMessage>>(emptyList()) }  // Lista de mensajes correctamente tipada
+    var messages by remember { mutableStateOf<List<ChatMessage>>(emptyList()) }
     var currentMessage by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
-    ) {
-        Text("Chatbot", style = MaterialTheme.typography.headlineMedium)
+    Scaffold(
+        topBar = { AppBarTop() },
+        content = { innerPadding ->
+            Box(modifier = Modifier.fillMaxSize()) {
 
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            reverseLayout = false
-        ) {
-            items(messages) { message ->
-                MessageBubble(message)
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
+                // Icono en la esquina superior izquierda, pero suficientemente abajo del TopAppBar
+                Text(
+                    text = "Chatbot",
+                    style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+                    fontSize = 24.sp,  // Ajusta el tamaño según sea necesario
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(top = 100.dp, start = 16.dp) // Asegúrate de que no quede tapado por el TopAppBar
+                )
 
-        errorMessage?.let {
-            Text(text = it, color = MaterialTheme.colorScheme.error)
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BasicTextField(
-                value = currentMessage,
-                onValueChange = { currentMessage = it },
-                modifier = Modifier
-                    .weight(1f)
-                    .background(Color.LightGray, RoundedCornerShape(10.dp))
-                    .padding(8.dp)
-            )
-
-            Button(
-                onClick = {
-                    if (currentMessage.isNotBlank()) {
-                        // Agregar el mensaje del usuario al historial
-                        messages = messages + ChatMessage(currentMessage, true)
-
-                        chatbotViewModel.sendQuestionToAPI(
-                            question = currentMessage,
-                            onSuccess = { botResponse ->
-                                // Agregar la respuesta del bot al historial
-                                messages = messages + ChatMessage(botResponse, false)
-                            },
-                            onFailure = { error ->
-                                errorMessage = error
-                            }
-                        )
-                        currentMessage = ""  // Limpiar el campo de entrada después de enviar
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(16.dp)
+                ) {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        reverseLayout = false
+                    ) {
+                        items(messages) { message ->
+                            MessageBubble(message)
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
                     }
-                },
-                modifier = Modifier.padding(start = 8.dp)
-            ) {
-                Text("Enviar")
+
+                    errorMessage?.let {
+                        Text(text = it, color = MaterialTheme.colorScheme.error)
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        BasicTextField(
+                            value = currentMessage,
+                            onValueChange = { currentMessage = it },
+                            modifier = Modifier
+                                .weight(1f)
+                                .background(Color.LightGray, RoundedCornerShape(10.dp))
+                                .padding(8.dp)
+                        )
+
+                        Button(
+                            onClick = {
+                                if (currentMessage.isNotBlank()) {
+                                    messages = messages + ChatMessage(currentMessage, true)
+
+                                    chatbotViewModel.sendQuestionToAPI(
+                                        question = currentMessage,
+                                        onSuccess = { botResponse ->
+                                            messages = messages + ChatMessage(botResponse, false)
+                                        },
+                                        onFailure = { error ->
+                                            errorMessage = error
+                                        }
+                                    )
+                                    currentMessage = ""  // Limpiar el campo de entrada después de enviar
+                                }
+                            },
+                            modifier = Modifier.padding(start = 8.dp)
+                        ) {
+                            Text("Enviar")
+                        }
+                    }
+                }
             }
-        }
-    }
+        },
+        bottomBar = { AppBarBottom(modifier = Modifier, navController) }
+    )
 }
 
 @Composable
@@ -114,4 +136,10 @@ fun MessageBubble(chatMessage: ChatMessage) {
     ) {
         Text(text = chatMessage.message, fontSize = 16.sp)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ChatbotScreenPreview() {
+    ChatbotScreen(navController = null)
 }
