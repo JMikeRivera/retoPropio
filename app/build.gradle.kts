@@ -70,6 +70,12 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.core.ktx)
     implementation(libs.okhttp)
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockwebserver)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.androidx.core.testing) // Para LiveData y ViewModel
+    testImplementation(libs.kotlinx.coroutines.test) // Para probar corutinas
     implementation(libs.coil.compose)
     implementation("androidx.media3:media3-exoplayer:1.1.0")
     implementation("androidx.media3:media3-ui:1.1.0")

@@ -2,6 +2,7 @@
 agp = "8.5.1"
 androidActivation = "1.6.7"
 coilCompose = "2.7.0"
+coreTesting = "2.2.0"
 datastorePreferences = "1.1.1"
 exoplayer = "2.19.1"
 generativeai = "0.9.0"
@@ -10,11 +11,15 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxCoroutinesTest = "1.6.0"
 lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.2"
 composeBom = "2024.04.01"
+mockitoCore = "4.2.0"
+mockwebserver = "4.9.3"
 navigationCompose = "2.8.2"
 okhttp = "4.12.0"
+robolectric = "4.8.1"
 runtimeLivedata = "1.7.3"
 datastoreCoreAndroid = "1.1.1"
 
@@ -22,6 +27,7 @@ datastoreCoreAndroid = "1.1.1"
 android-activation = { module = "com.sun.mail:android-activation", version.ref = "androidActivation" }
 android-mail = { module = "com.sun.mail:android-mail", version.ref = "androidActivation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoplayer" }
@@ -42,7 +48,11 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "mockwebserver" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
