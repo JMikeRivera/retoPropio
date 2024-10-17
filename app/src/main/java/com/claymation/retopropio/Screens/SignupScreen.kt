@@ -1,6 +1,7 @@
 package com.claymation.retopropio.Screens
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,10 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -21,12 +25,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.claymation.retopropio.R
 import com.claymation.retopropio.Viewmodels.ViewModel
 
 @Composable
@@ -59,12 +67,28 @@ fun SignupScreen(navController: NavController?) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.bufetec),
+            contentDescription = "Imagen Bufetec",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+        )
+
         // Name TextField
         OutlinedTextField(
             value = name,
             onValueChange = { viewModel.updateName(it) },
             label = { Text("Nombre") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedLabelColor = Color(0xFF539EFF),
+                unfocusedLabelColor = Color(0xFF539EFF),
+                focusedBorderColor = Color(0xFF539EFF),
+                unfocusedBorderColor = Color(0xFF539EFF)
+            )
+
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -74,7 +98,13 @@ fun SignupScreen(navController: NavController?) {
             value = secname,
             onValueChange = { viewModel.updateSecName(it) },
             label = { Text("Apellido") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedLabelColor = Color(0xFF539EFF),
+                unfocusedLabelColor = Color(0xFF539EFF),
+                focusedBorderColor = Color(0xFF539EFF),
+                unfocusedBorderColor = Color(0xFF539EFF)
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -85,7 +115,13 @@ fun SignupScreen(navController: NavController?) {
             onValueChange = { viewModel.updateEmail(it) },
             label = { Text("Correo Electrónico") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedLabelColor = Color(0xFF539EFF),
+                unfocusedLabelColor = Color(0xFF539EFF),
+                focusedBorderColor = Color(0xFF539EFF),
+                unfocusedBorderColor = Color(0xFF539EFF)
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -96,7 +132,13 @@ fun SignupScreen(navController: NavController?) {
             onValueChange = { viewModel.updateAge(it) },
             label = { Text("Edad") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedLabelColor = Color(0xFF539EFF),
+                unfocusedLabelColor = Color(0xFF539EFF),
+                focusedBorderColor = Color(0xFF539EFF),
+                unfocusedBorderColor = Color(0xFF539EFF)
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -107,7 +149,13 @@ fun SignupScreen(navController: NavController?) {
             onValueChange = { viewModel.updatePhone(it) },
             label = { Text("Teléfono") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedLabelColor = Color(0xFF539EFF),
+                unfocusedLabelColor = Color(0xFF539EFF),
+                focusedBorderColor = Color(0xFF539EFF),
+                unfocusedBorderColor = Color(0xFF539EFF)
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -119,7 +167,13 @@ fun SignupScreen(navController: NavController?) {
             label = { Text("Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedLabelColor = Color(0xFF539EFF),
+                unfocusedLabelColor = Color(0xFF539EFF),
+                focusedBorderColor = Color(0xFF539EFF),
+                unfocusedBorderColor = Color(0xFF539EFF)
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -131,7 +185,13 @@ fun SignupScreen(navController: NavController?) {
             label = { Text("Confirmar Contraseña") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedLabelColor = Color(0xFF539EFF),
+                unfocusedLabelColor = Color(0xFF539EFF),
+                focusedBorderColor = Color(0xFF539EFF),
+                unfocusedBorderColor = Color(0xFF539EFF)
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -157,7 +217,9 @@ fun SignupScreen(navController: NavController?) {
                     }
                 )
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF539EFF))
         ) {
             Text(text = "Registrar")
         }
@@ -167,8 +229,17 @@ fun SignupScreen(navController: NavController?) {
         // Already have an account? Go to login
         TextButton(onClick = {
             navController?.navigate("LoginScreen")
-        }) {
+        },
+            colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF539EFF))
+            ) {
             Text(text = "¿Ya tienes cuenta? Inicia sesión")
         }
     }
 }
+
+@Preview
+@Composable
+fun SignupScreenPreview() {
+    SignupScreen(null)
+}
+

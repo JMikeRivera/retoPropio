@@ -103,7 +103,7 @@ fun ChatbotScreen(navController: NavController?, chatbotViewModel: ViewModel = v
                                             messages = messages + ChatMessage(botResponse, false)
                                         },
                                         onFailure = { error ->
-                                            errorMessage = error
+                                            errorMessage = "Vuelve a intentar"
                                         }
                                     )
                                     currentMessage = ""  // Limpiar el campo de entrada después de enviar

@@ -59,6 +59,7 @@ fun RegistroScreen(navController: NavController, topic: String) {
 
     val email by viewModel.email.collectAsState()
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -173,7 +174,7 @@ fun RegistroScreen(navController: NavController, topic: String) {
 
                         }
                     )
-                    sendEmail(context,email)
+                    sendEmail(context,email, topic)
                 }
                 else {
                     println("Los datos no son válidos")
@@ -270,14 +271,14 @@ fun SeccionFormulario(titulo: String, contenido: @Composable () -> Unit) {
 }
 
 
-fun sendEmail(context: Context, userEmail: String) {
+fun sendEmail(context: Context, userEmail: String, usertema: String) {
     val senderEmail = "ejemplosender@gmail.com"  // Sender's email
     val password = "mslu ytvb ayeo cmwo"       // App password (use the correct app password)
     val recipientEmail = "a00836995@tec.mx"    // Recipient's email
     val subject = "Nuevo Caso Recibido"
 
     // Use the user's email in the body of the email
-    val body = "Hola abogado, llego un nuevo caso de $userEmail"
+    val body = "Hola abogado, llego un nuevo caso de $userEmail respecto a: $usertema"
 
     // Sending the email
     SendEmailTask(senderEmail, password, recipientEmail, subject, body).execute()
