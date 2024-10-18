@@ -66,6 +66,14 @@ android {
 }
 
 dependencies {
+    testImplementation ("junit:junit:4.13.2")
+    testImplementation ("androidx.arch.core:core-testing:2.1.0")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation ("org.mockito:mockito-core:4.8.0")
+    testImplementation ("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation ("org.robolectric:robolectric:4.9")
+    testImplementation ("io.mockk:mockk:1.13.3")
+    testImplementation ("io.mockk:mockk-android:1.13.3")
     implementation(libs.generativeai)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.core.ktx)
