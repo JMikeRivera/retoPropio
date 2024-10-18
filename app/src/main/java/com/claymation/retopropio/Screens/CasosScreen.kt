@@ -64,7 +64,6 @@ fun CasosScreen(navController: NavController, topic: String) {
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(

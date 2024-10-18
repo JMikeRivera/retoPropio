@@ -1,6 +1,9 @@
 package com.claymation.retopropio
 
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.navigation.NavController
+import com.claymation.retopropio.Screens.MostrarCasosDerechoCivil
 import com.claymation.retopropio.Screens.validarDatos
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -10,6 +13,7 @@ import org.junit.Assert.fail
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 import com.claymation.retopropio.Viewmodels.ViewModel as MyViewModel
 
@@ -32,7 +36,58 @@ class ViewModelTest {
             fail("La API debería haber respondido correctamente")
         })
     }
+
+    @Test
+    fun `login should trigger onFailure callback on API error`() = runTest {
+        val context = mock(Context::class.java)
+        val viewModel = MyViewModel()
+
+        // Mocking failure callback
+        var isLoginFailed = false
+
+        viewModel.updateEmail("wrongemail@mail.com")
+        viewModel.updatePassword("wrongpassword")
+
+        viewModel.login(context, onSuccess = {
+            fail("Login should have failed")
+        }, onFailure = {
+            isLoginFailed = true
+        })
+
+        // Simulate the failure response
+        assertTrue("Login should have failed", isLoginFailed)
+        assertFalse("User should not be marked as logged in", viewModel.isLoggedIn.value)
+    }
+
+    @Test
+    fun `register should successfully register a new user`() = runTest {
+        val context = mock(Context::class.java)
+        val viewModel = MyViewModel()
+
+        // Mocking success callback
+        var isRegisterSuccess = false
+
+        // Set valid data for registration
+        viewModel.updateName("John")
+        viewModel.updateSecName("Doe")
+        viewModel.updateEmail("john.doe@mail.com")
+        viewModel.updateAge("25")
+        viewModel.updatePhone("1234567890")
+        viewModel.updatePassword("password123")
+        viewModel.updateConfirmPassword("password123")
+
+        viewModel.register(context, onSuccess = {
+            isRegisterSuccess = true
+        }, onFailure = {
+            fail("Registration should have succeeded")
+        })
+
+        // Simulate the success response
+        assertTrue("Registration should have succeeded", isRegisterSuccess)
+    }
+
 }
+
 
 class RegistroScreenTest {
 
@@ -90,4 +145,5 @@ class RegistroScreenTest {
 
         assertFalse("La validación debería fallar porque no cumple ninguna condición", resultado)
     }
+
 }
